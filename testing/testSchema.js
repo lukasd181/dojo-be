@@ -54,31 +54,37 @@ const generateData = async () => {
     }
     console.log(`| Each user writes ${otherNum} experiences`);
     console.log("-------------------------------------------");
+    const categories = [
+      "Cooking",
+      "Art and Culture",
+      "Sports",
+      "Entertainment",
+      "Food and drink",
+      "Nature and outdoors",
+      "Transportation activities",
+      "Sightseeing",
+    ];
+    const languages = ["English", "Vietnamese", "Korean", "French"];
     for (let i = 0; i < userNum; i++) {
       for (let j = 0; j < otherNum; j++) {
         await Experience.create({
           title: faker.lorem.sentence(),
+          city: faker.address.city(),
+          country: faker.address.country(),
+          category: categories[getRandomInt(0, 7)],
+          minimumRate: getRandomInt(25, 50),
+          duration: 60,
+          groupCapacity: getRandomInt(5, 15),
+          language: languages[getRandomInt(0, 3)],
           description: faker.lorem.paragraph(),
-          images: [
+          pictures: [
             faker.image.imageUrl(400, 300),
             faker.image.imageUrl(400, 300),
           ],
-          author: users[i]._id,
+          user: users[i]._id,
         }).then(async (experience) => {
           console.log("Created experience:" + experience.title);
           experiences.push(experience);
-
-          console.log(
-            `| Each experience has ${otherNum} reviews from ${otherNum} random users`
-          );
-          console.log("-------------------------------------------");
-          for (let k = 0; k < otherNum; k++) {
-            await Review.create({
-              description: faker.lorem.sentence(),
-              user: users[getRandomInt(0, userNum - 1)]._id,
-              experience: experience._id,
-            });
-          }
         });
       }
     }
@@ -95,7 +101,7 @@ const getRandomExperiences = async (experienceNum) => {
   for (let i = 0; i < experienceNum; ++i) {
     const experience = await Experience.findOne()
       .skip(getRandomInt(0, totalExperienceNum - 1))
-      .populate("author");
+      .populate("user");
     console.log(experience);
   }
 };

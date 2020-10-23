@@ -28,10 +28,10 @@ mongoose
     useFindAndModify: false,
     useUnifiedTopology: true,
   })
-  //   .then(() => {
-  //     console.log(`Mongoose connected to ${mongoURI}`);
-  //     require("./testing/testSchema");
-  //   })
+  .then(() => {
+    console.log(`Mongoose connected to ${mongoURI}`);
+    require("./testing/testSchema");
+  })
   .catch((err) => console.log(err));
 
 const db = mongoose.connection;
