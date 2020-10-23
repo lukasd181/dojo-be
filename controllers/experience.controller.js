@@ -7,7 +7,11 @@ const Experience = require("../models/experience");
 const experienceController = {};
 
 experienceController.getExperiences = catchAsync(async (req, res, next) => {
-  let { page, limit, sortBy, ...filter } = { ...req.query };
+  let { page, limit, sortBy, min, max, ...filter } = { ...req.query };
+
+  const filteredList = await Experience.find({
+    minimumRate: { $gt: min, $lt: max },
+  });
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 25;
 
@@ -25,7 +29,14 @@ experienceController.getExperiences = catchAsync(async (req, res, next) => {
     .limit(limit)
     .populate("user");
 
-  return sendResponse(res, 200, true, { experiences, totalPages }, null, "");
+  return sendResponse(
+    res,
+    200,
+    true,
+    { filteredList, experiences, totalPages },
+    null,
+    ""
+  );
 });
 
 experienceController.getSingleExperience = catchAsync(
