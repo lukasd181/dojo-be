@@ -61,13 +61,13 @@ router.put(
  * @description Delete a experience
  * @access Login required
  */
-// router.delete(
-//   "/:id",
-//   authMiddleware.loginRequired,
-//   validators.validate([
-//     param("id").exists().isString().custom(validators.checkObjectId),
-//   ]),
-//   experienceController.deleteSingleExperience
-// );
+router.delete(
+  "/:id",
+  authMiddleware.loginRequired,
+  validators.validate([
+    param("id").exists().isString().custom(validators.checkObjectId),
+  ]),
+  experienceController.deleteSingleExperience
+);
 
 module.exports = router;

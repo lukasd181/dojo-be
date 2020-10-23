@@ -4,7 +4,6 @@ const {
   sendResponse,
 } = require("../helpers/utils.helper");
 const Experience = require("../models/experience");
-const User = require("../models/user");
 const experienceController = {};
 
 experienceController.getExperiences = catchAsync(async (req, res, next) => {

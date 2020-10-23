@@ -52,7 +52,6 @@ userController.updateProfile = catchAsync(async (req, res, next) => {
 
 userController.getUsers = catchAsync(async (req, res, next) => {
   let { page, limit, sortBy, ...filter } = { ...req.query };
-  const currentUserId = req.userId;
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
 
@@ -67,11 +66,6 @@ userController.getUsers = catchAsync(async (req, res, next) => {
     .sort({ ...sortBy, createdAt: -1 })
     .skip(offset)
     .limit(limit);
-
-  const promises = users.map(async (user) => {
-    let temp = user.toJSON();
-    return temp;
-  });
 
   return sendResponse(res, 200, true, { users, totalPages }, null, "");
 });
