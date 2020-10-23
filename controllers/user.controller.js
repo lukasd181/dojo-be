@@ -3,7 +3,7 @@ const {
   catchAsync,
   sendResponse,
 } = require("../helpers/utils.helper");
-const User = require("../models/User");
+const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const userController = {};
 
@@ -20,7 +20,6 @@ userController.register = catchAsync(async (req, res, next) => {
     email,
     password,
     avatarUrl,
-    description,
   });
   const accessToken = await user.generateToken();
 
@@ -74,14 +73,7 @@ userController.getUsers = catchAsync(async (req, res, next) => {
     return temp;
   });
 
-  return sendResponse(
-    res,
-    200,
-    true,
-    { users: usersWithFriendship, totalPages },
-    null,
-    ""
-  );
+  return sendResponse(res, 200, true, { users, totalPages }, null, "");
 });
 
 userController.getCurrentUser = catchAsync(async (req, res, next) => {

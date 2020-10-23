@@ -5,12 +5,12 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
 const utilsHelper = require("./helpers/utils.helper");
+const mongoURI = process.env.MONGODB_URI;
 
 var indexRouter = require("./routes/index");
 const mongoose = require("mongoose");
 
 var app = express();
-const db = mongoose.connect("mongodb://localhost", { useNewUrlParser: true });
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -18,6 +18,27 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
+
+/* DB Connections */
+mongoose
+  .connect(mongoURI, {
+    // some options to deal with deprecated warning
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  })
+  //   .then(() => {
+  //     console.log(`Mongoose connected to ${mongoURI}`);
+  //     require("./testing/testSchema");
+  //   })
+  .catch((err) => console.log(err));
+
+const db = mongoose.connection;
+
+db.once("open", function () {
+  console.log("MongoDB database connection established successfully!");
+});
 
 app.use("/api", indexRouter);
 

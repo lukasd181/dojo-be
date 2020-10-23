@@ -10,7 +10,7 @@ const { body, param } = require("express-validator");
  * @description Get experiences with pagination
  * @access Public
  */
-router.get("/", experienceController.getBlogs);
+router.get("/", experienceController.getExperiences);
 
 /**
  * @route GET api/experiences/:id
@@ -22,7 +22,7 @@ router.get(
   validators.validate([
     param("id").exists().isString().custom(validators.checkObjectId),
   ]),
-  experienceController.getSingleBlog
+  experienceController.getSingleExperience
 );
 
 /**
@@ -35,9 +35,9 @@ router.post(
   authMiddleware.loginRequired,
   validators.validate([
     body("title", "Missing title").exists().notEmpty(),
-    body("content", "Missing content").exists().notEmpty(),
+    body("description", "Missing description").exists().notEmpty(),
   ]),
-  experienceController.createNewBlog
+  experienceController.createNewExperience
 );
 
 /**
@@ -51,9 +51,9 @@ router.put(
   validators.validate([
     param("id").exists().isString().custom(validators.checkObjectId),
     body("title", "Missing title").exists().notEmpty(),
-    body("content", "Missing content").exists().notEmpty(),
+    body("description", "Missing description").exists().notEmpty(),
   ]),
-  experienceController.updateSingleBlog
+  experienceController.updateSingleExperience
 );
 
 /**
@@ -61,13 +61,13 @@ router.put(
  * @description Delete a experience
  * @access Login required
  */
-router.delete(
-  "/:id",
-  authMiddleware.loginRequired,
-  validators.validate([
-    param("id").exists().isString().custom(validators.checkObjectId),
-  ]),
-  experienceController.deleteSingleBlog
-);
+// router.delete(
+//   "/:id",
+//   authMiddleware.loginRequired,
+//   validators.validate([
+//     param("id").exists().isString().custom(validators.checkObjectId),
+//   ]),
+//   experienceController.deleteSingleExperience
+// );
 
 module.exports = router;

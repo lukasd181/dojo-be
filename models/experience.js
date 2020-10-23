@@ -24,7 +24,11 @@ const experienceSchema = Schema(
     minimumRate: { type: Number, required: true },
     duration: { type: Number, required: true },
     groupCapacity: { type: Number, required: true },
-    language: { type: [String], required: true },
+    language: {
+      type: [String],
+      required: true,
+      enum: ["English", "Vietnamese", "Korean", "French"],
+    },
     description: { type: String, required: true },
     user: { type: Schema.ObjectId, required: true, ref: "User" },
   },
