@@ -3,7 +3,7 @@ const {
   catchAsync,
   sendResponse,
 } = require("../helpers/utils.helper");
-const User = require("../models/user");
+const User = require("../models/user/user");
 const bcrypt = require("bcryptjs");
 const authController = {};
 
@@ -73,5 +73,25 @@ authController.loginWithFacebookOrGoogle = catchAsync(
     );
   }
 );
+
+authController.auth = async (req, res, next) => {
+  try {
+    if (!req.headers.authorization)
+      return res
+        .status(401)
+        .json({ status: "fail", message: "Unauthorization" });
+
+    const token = req.headers.authorization.replace("Bearer ", "");
+    const decoded = jwt.verify(token, process.env.secret);
+    const user = await User.findOne({ _id: decoded.id });
+    if (!user) {
+      throw new Error("unauthorized2");
+    }
+    req.user = user;
+  } catch (err) {
+    return res.status(401).json({ status: "fail", message: err.message });
+  }
+  next();
+};
 
 module.exports = authController;

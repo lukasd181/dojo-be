@@ -7,19 +7,8 @@ const cors = require("cors");
 const utilsHelper = require("./helpers/utils.helper");
 const mongoURI = process.env.MONGODB_URI;
 
-var indexRouter = require("./routes/index");
-const mongoose = require("mongoose");
-
-var app = express();
-
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(cors());
-app.use(express.static(path.join(__dirname, "public")));
-
 /* DB Connections */
+const mongoose = require("mongoose");
 mongoose
   .connect(mongoURI, {
     // some options to deal with deprecated warning
@@ -30,7 +19,7 @@ mongoose
   })
   .then(() => {
     console.log(`Mongoose connected to ${mongoURI}`);
-    require("./testing/testSchema");
+    // require("./testing/testSchema");
   })
   .catch((err) => console.log(err));
 
@@ -39,6 +28,17 @@ const db = mongoose.connection;
 db.once("open", function () {
   console.log("MongoDB database connection established successfully!");
 });
+
+var indexRouter = require("./routes/index");
+
+var app = express();
+
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(cors());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", indexRouter);
 

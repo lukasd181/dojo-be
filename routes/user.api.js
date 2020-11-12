@@ -28,6 +28,13 @@ router.post(
 router.put("/", authMiddleware.loginRequired, userController.updateProfile);
 
 /**
+ * @route PUT api/users/userlevel
+ * @description Update user level
+ * @access Login required
+ */
+router.put("/userlevel", authMiddleware.loginRequired, userController.updateUserLevel);
+
+/**
  * @route GET api/users/me
  * @description Get current user info
  * @access Login required
@@ -40,5 +47,12 @@ router.get("/me", authMiddleware.loginRequired, userController.getCurrentUser);
  * @access Login required
  */
 router.get("/", authMiddleware.loginRequired, userController.getUsers);
+
+/**
+ * @route PUT api/users/userlevel
+ * @description Update user level
+ * @access Login required
+ */
+router.put("/userlevel", authMiddleware.loginRequired, userController.updateUserLevel);
 
 module.exports = router;

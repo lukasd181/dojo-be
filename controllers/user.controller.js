@@ -3,12 +3,13 @@ const {
   catchAsync,
   sendResponse,
 } = require("../helpers/utils.helper");
-const User = require("../models/user");
+const User = require("../models/user/user");
+const Fighter = require("../models/user/fighter");
 const bcrypt = require("bcryptjs");
 const userController = {};
 
 userController.register = catchAsync(async (req, res, next) => {
-  let { name, email, avatarUrl, password } = req.body;
+  let { name, email, avatarUrl, password, userType } = req.body;
   let user = await User.findOne({ email });
   if (user)
     return next(new AppError(409, "User already exists", "Register Error"));
@@ -20,10 +21,18 @@ userController.register = catchAsync(async (req, res, next) => {
     email,
     password,
     avatarUrl,
+    userType,
   });
   const accessToken = await user.generateToken();
 
-  return sendResponse(res, 200, true, { user }, null, "Create user successful");
+  return sendResponse(
+    res,
+    200,
+    true,
+    { user, accessToken },
+    null,
+    "Create user successful"
+  );
 });
 
 userController.updateProfile = catchAsync(async (req, res, next) => {
@@ -71,10 +80,13 @@ userController.getUsers = catchAsync(async (req, res, next) => {
 });
 
 userController.getCurrentUser = catchAsync(async (req, res, next) => {
+  console.log("hererere");
   const userId = req.userId;
   const user = await User.findById(userId);
   if (!user)
     return next(new AppError(400, "User not found", "Get Current User Error"));
+
+console.log("jijijiji")
   return sendResponse(
     res,
     200,
@@ -83,6 +95,23 @@ userController.getCurrentUser = catchAsync(async (req, res, next) => {
     null,
     "Get current user successful"
   );
+});
+
+userController.updateUserLevel = catchAsync(async (req, res, next) => {
+  const userId = req.userId;
+  const fighterObj = await User.findById(userId);
+  if (fighterObj) {
+    const user = await User.findOneAndUpdate({ _id: userId }, { userLevel: 2 });
+    return sendResponse(
+      res,
+      200,
+      true,
+      user,
+      null,
+      "Update User Level successfully"
+    );
+  }
+  return sendResponse(res, 200, true, null, null, "No update has been made.");
 });
 
 module.exports = userController;
